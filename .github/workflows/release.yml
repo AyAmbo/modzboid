@@ -1,0 +1,100 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            args: ''
+          - platform: ubuntu-22.04
+            args: ''
+
+    runs-on: ${{ matrix.platform }}
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build and sign Tauri app
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: npm run tauri build -- ${{ matrix.args }}
+
+      - name: Create portable zip (Windows)
+        if: matrix.platform == 'windows-latest'
+        shell: pwsh
+        run: |
+          $exe = "src-tauri/target/release/project-modzboid.exe"
+          $dir = "portable"
+          New-Item -ItemType Directory -Path $dir -Force
+          Copy-Item $exe "$dir/project-modzboid.exe"
+          New-Item -ItemType File -Path "$dir/portable.txt" -Force
+          Compress-Archive -Path "$dir/*" -DestinationPath "src-tauri/target/release/bundle/project-modzboid_portable_x64.zip"
+
+      - name: Upload portable zip (Windows)
+        if: matrix.platform == 'windows-latest'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          gh release upload "$TAG" "src-tauri/target/release/bundle/project-modzboid_portable_x64.zip" --clobber || true
+
+      - name: Upload to release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: v__VERSION__
+          releaseName: 'Project Modzboid v__VERSION__'
+          releaseBody: |
+            See the [changelog](https://github.com/AyAmbo/modzboid/blob/main/CHANGELOG.md) for details.
+
+            ## Install
+            - **Windows:** Download the `.msi` or `.exe` installer
+            - **Linux:** Download the `.AppImage` or `.deb`
+            - **Portable (Windows):** Download `project-modzboid_portable_x64.zip`, extract and run
+            - **Auto-update:** Existing installs will update automatically
+
+            ## Extensions
+            Download extension packs from [modzboid-extensions](https://github.com/AyAmbo/modzboid-extensions/releases).
+          releaseDraft: true
+          prerelease: false
+          tauriScript: ''
+          args: ${{ matrix.args }}

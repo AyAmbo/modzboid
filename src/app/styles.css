@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #6366f1;
+  --color-primary-foreground: #ffffff;
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0b;
+  --color-muted: #f4f4f5;
+  --color-muted-foreground: #71717a;
+  --color-border: #e4e4e7;
+  --color-card: #ffffff;
+  --color-card-foreground: #0a0a0b;
+  --color-destructive: #ef4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+}
+
+.dark {
+  --color-background: #0a0a0b;
+  --color-foreground: #fafafa;
+  --color-muted: #27272a;
+  --color-muted-foreground: #a1a1aa;
+  --color-border: #27272a;
+  --color-card: #18181b;
+  --color-card-foreground: #fafafa;
+  color-scheme: dark;
+}
+
+/* Ensure height chain for h-full scaling (html → body → #root → layout) */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+/* Fix ReactFlow controls in dark mode — default is white on white */
+.dark .react-flow__controls {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  bottom: 3rem;
+}
+.dark .react-flow__controls button {
+  background: var(--color-card);
+  border-color: var(--color-border);
+  color: var(--color-foreground);
+  fill: var(--color-foreground);
+}
+.dark .react-flow__controls button:hover {
+  background: var(--color-muted);
+}
+.dark .react-flow__controls button svg {
+  fill: var(--color-foreground);
+}
+
+/* Fix native select/option elements in dark mode (Linux WebKitGTK) */
+.dark select,
+.dark option {
+  background-color: var(--color-muted);
+  color: var(--color-foreground);
+}

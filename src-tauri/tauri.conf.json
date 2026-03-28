@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "project-modzboid",
+  "version": "0.1.0",
+  "identifier": "com.projectmodzboid.app",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Project Modzboid",
+        "width": 800,
+        "height": 600
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: asset: http://asset.localhost; connect-src 'self' ipc: http://ipc.localhost; frame-src 'self' asset: http://asset.localhost pzdocs: http://pzdocs.localhost https://pzdocs.localhost file:",
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["**/*", "$APPDATA/**/*", "$HOME/**/*"]
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDkzNzNBQzg3MTkzOUY1MDgKUldRSTlUa1poNnh6azF3QStDemNraE1DNnNoOTdaNXR5aFlpb29vNHZUUm56dzByeEg5UDZMNFYK",
+      "endpoints": [
+        "https://github.com/AyAmbo/modzboid/releases/latest/download/latest.json"
+      ]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

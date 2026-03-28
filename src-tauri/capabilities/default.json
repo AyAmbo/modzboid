@@ -1,0 +1,21 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Default capabilities for Project Modzboid",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        { "name": "launch-pz-windows", "cmd": "ProjectZomboid64.exe", "args": true },
+        { "name": "launch-pz-linux", "cmd": "projectzomboid", "args": true }
+      ]
+    },
+    "shell:allow-open",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "core:image:default",
+    "updater:default"
+  ]
+}

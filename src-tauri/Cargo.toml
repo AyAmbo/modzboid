@@ -1,0 +1,52 @@
+[package]
+name = "project-modzboid"
+version = "0.1.0"
+description = "Desktop mod manager for Project Zomboid B42"
+license = "AGPL-3.0-only"
+repository = "https://github.com/AyAmbo/modzboid"
+authors = ["AyAmbo"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "project_modzboid_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["protocol-asset"] }
+tauri-plugin-opener = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite", "migrate"] }
+thiserror = "2"
+notify = "7"
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+tokio = { version = "1", features = ["full"] }
+walkdir = "2"
+regex = "1"
+log = "0.4"
+env_logger = "0.11"
+zip = "2"
+tempfile = "3"
+open = "5"
+urlencoding = "2"
+clap = { version = "4", features = ["derive"] }
+tauri-plugin-updater = "2"
+full_moon = "1"
+reqwest = { version = "0.12", features = ["json"] }
+flate2 = "1"
+tar = "0.4"
+crc32fast = "1"
+
+[dev-dependencies]
+tempfile = "3"
