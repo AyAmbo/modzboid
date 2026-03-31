@@ -14,7 +14,7 @@ pub async fn discover_mods(state: State<'_, AppState>) -> Result<Vec<ModInfo>, A
         config.workshop_path.as_deref(),
         config.local_mods_path.as_deref(),
         config.game_path.as_deref(),
-        config.game_version.as_deref().unwrap_or("42.15"),
+        config.game_version.as_deref().unwrap_or("42.16"),
     )?;
     drop(config);
     cache::cache_mods(&state.db, &mods).await?;
@@ -125,7 +125,7 @@ pub async fn rescan_mod_version(
         .ok_or_else(|| AppError::NotFound(format!("Mod not found: {}", mod_id)))?;
 
     let config = state.config.read().await;
-    let game_version = config.game_version.as_deref().unwrap_or("42.15");
+    let game_version = config.game_version.as_deref().unwrap_or("42.16");
 
     let updated = scanner::rescan_mod_with_version(
         &existing.source_path,

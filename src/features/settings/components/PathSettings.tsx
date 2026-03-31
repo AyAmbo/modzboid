@@ -295,15 +295,15 @@ export function PathSettings() {
         <Input
           className="flex-1 font-mono min-w-0 max-w-48"
           value={localGameVersion ?? ""}
-          placeholder="e.g. 42.15.2"
+          placeholder="e.g. 42.16.0"
           onChange={(e) => setLocalGameVersion(e.target.value || null)}
         />
         {detectedBuild && !localGameVersion && (
           <button
             className="text-xs text-primary hover:underline shrink-0"
-            onClick={() => setLocalGameVersion("42.15.2")}
+            onClick={() => setLocalGameVersion("42.16.0")}
           >
-            Set to 42.15.2 (current)
+            Set to 42.16.0 (current)
           </button>
         )}
         {detectedBuild && (
