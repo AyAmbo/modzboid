@@ -1,7 +1,7 @@
 {
   "name": "project-modzboid",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Desktop mod manager for Project Zomboid B42",
   "author": "Ambo",
   "license": "AGPL-3.0-only",
